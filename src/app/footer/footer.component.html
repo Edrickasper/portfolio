@@ -1,0 +1,15 @@
+<footer
+  class="bg-black text-zinc-400 py-10 px-6 text-center border-t border-zinc-800"
+>
+  <div class="flex justify-center gap-6 mb-4 text-2xl">
+    @for (social of socials; track $index) {
+    <a [href]="social.link" target="_blank" class="hover:text-white transition">
+      <i [class]="social.logo"></i>
+    </a>
+    }
+  </div>
+
+  <p class="text-sm">
+    © 2025 Edric Kasper. Built with passion, pixels, and peace
+  </p>
+</footer>
