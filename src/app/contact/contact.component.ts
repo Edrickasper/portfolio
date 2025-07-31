@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-
 import emailjs, { type EmailJSResponseStatus } from '@emailjs/browser';
+
+import { SnackBarService } from '../services/snackbar.service';
 
 @Component({
   selector: 'app-contact',
@@ -12,9 +13,18 @@ import emailjs, { type EmailJSResponseStatus } from '@emailjs/browser';
 })
 export class ContactComponent {
   @ViewChild('contactForm', { static: false }) form!: NgForm;
+  loading = false
+
+  constructor(private snackBarService: SnackBarService) { }
 
   onSubmit(e: Event) {
+    this.loading = true;
     e.preventDefault();
+    if (this.form.invalid) {
+      this.loading = false
+      this.snackBarService.showError('Please enter valid details')
+      return;
+    }
 
     emailjs
       .sendForm(
@@ -27,14 +37,13 @@ export class ContactComponent {
       )
       .then(
         () => {
-          // console.log('SUCCESS!');
-          alert('Mail sent successfully!');
+          this.loading = false
+          this.snackBarService.showSuccess('Thank you! Your message has been successfully sent. We’ll get back to you as soon as possible.')
           this.form.reset();
         },
         (error) => {
-          alert('Error while sending mail. TRY AGAIN!');
-          // console.log('FAILED...', (error as EmailJSResponseStatus).text);
-          console.log(e);
+          this.loading = false
+          this.snackBarService.showError('Oops! Something went wrong while sending your message. Please try again later or contact us directly at edrickasper66@gmail.com.');
         }
       );
   }
